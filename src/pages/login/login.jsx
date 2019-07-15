@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
-import './login.less'
+import { Form, Icon, Input, Button, Checkbox } from 'antd';
 
+import './login.less'
 import logo from './images/logo.png'
 
 export default class Login extends Component {
@@ -13,8 +14,8 @@ export default class Login extends Component {
                 </div>
                 <div className="login-content">
                     <h1>用户登录</h1>
-                    <div>form组价</div>
-                    </div>
+                    <div>form组件</div>
+                 </div>
             </div>
         )
     }
