@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
-import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import {message} from 'antd'
+import {HashRouter,Switch, Route} from 'react-router-dom'
 
 import Login from './pages/login/login'
 import Admin from './pages/admin/admin'
@@ -9,14 +10,17 @@ import Admin from './pages/admin/admin'
  */
 class App extends Component {
 
+  handleClick=()=>{
+    message.success('成功了...')
+  }
   render() {
     return (
-      <BrowserRouter>
+      <HashRouter>
         <Switch>
           <Route path='/login' component={Login}/>
           <Route path='/admin' component={Admin}/>
         </Switch>
-      </BrowserRouter>
+      </HashRouter>
     )
   }
 }
