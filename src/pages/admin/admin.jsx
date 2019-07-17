@@ -16,6 +16,7 @@ import Line from '../charts/line'
 import Pie from '../charts/pie'
 
 const { Footer, Sider, Content } = Layout
+
 export default class Admin extends Component {
     render() {
 
@@ -33,15 +34,15 @@ export default class Admin extends Component {
           <Header/>
           <Content style={{ background: 'pink' }}>
             <Switch>
-              <Route path="/home" component={Home}/>
-              <Route path='/category' component={Category} />
-              <Route path='/product' component={Product} />
-              <Route path='/role' component={Role} />
-              <Route path='/user' component={User} />
-              <Route path='/charts/bar' component={Bar} />
-              <Route path='/charts/line' component={Line} />
-              <Route path='/charts/pie' component={Pie} />
-              <Redirect to="/home"/>
+              <Route path="/admin/home" component={Home}/>
+              <Route path='/admin/category' component={Category} />
+              <Route path='/admin/product' component={Product} />
+              <Route path='/admin/role' component={Role} />
+              <Route path='/admin/user' component={User} />
+              <Route path='/admin/charts/bar' component={Bar} />
+              <Route path='/admin/charts/line' component={Line} />
+              <Route path='/admin/charts/pie' component={Pie} />
+              <Redirect to="/admin/home"/>
             </Switch>
           </Content>
           <Footer style={{ textAlign: 'center', color: 'rgba(0, 0, 0, 0.5)'}}>

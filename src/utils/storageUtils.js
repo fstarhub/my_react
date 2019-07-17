@@ -7,7 +7,7 @@ export default {
 
     //保存user
     saveUser(user){
-        store.ser(USER_KEY,user)
+        store.set(USER_KEY,user)
     },
 
     //返回user对象,如果没有返回{}

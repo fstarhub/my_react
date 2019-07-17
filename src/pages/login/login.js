@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
+import { Redirect } from 'react-router-dom'
 import { Form, Icon, Input, Button,message} from 'antd';
 
+import memoryUtils from '../../utils/memoryUtils'
+import storageUtils from '../../utils/storageUtils'
 import {reqLogin} from '../../api'
 import './login.less'
 import logo from '../../assets/images/logo.png'
@@ -8,19 +11,24 @@ import logo from '../../assets/images/logo.png'
 class Login extends Component {
 
         handleSubmit = e => {
+         
             //阻止默认事件(表单提交)
             e.preventDefault();
-            alert('即将发送ajax请求')
 
             //表单所有数据统一验证
             this.props.form.validateFields(async (err,{username,password})=>{
               if(!err){
                   const result=await reqLogin(username,password)
                   if(result.status===0){
-                      this.props.history.replace('/admin')
-                      message.success('登录成功了')
+                    //信息保存到local
+                    const user=result.data
+                    storageUtils.saveUser(user)
+                    // 保存到内存中
+                    memoryUtils.user = user
+                    this.props.history.replace('/admin')
+                    message.success('登录成功了')
                   }else{
-                      message.error(result.msg)
+                    message.error(result.msg)
                   }
               }else{
                   //(''验证失败)
@@ -47,6 +55,11 @@ class Login extends Component {
 
 
     render() {
+      console.log (2)
+      const user=memoryUtils.user
+      if (user._id) {
+        return <Redirect to="/admin" /> // 自动跳转到指定的路由路径
+      }
         const {getFieldDecorator}=this.props.form
 
         return (
