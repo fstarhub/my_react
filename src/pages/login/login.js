@@ -55,7 +55,7 @@ class Login extends Component {
 
 
     render() {
-      console.log (2)
+
       const user=memoryUtils.user
       if (user._id) {
         return <Redirect to="/admin" /> // 自动跳转到指定的路由路径

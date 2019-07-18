@@ -8,7 +8,7 @@ import Header from '../../components/header'
 
 import Home from '../home/home'
 import Category from '../category/category'
-import Product from '../product/porduct'
+import Product from '../product/product'
 import Role from '../role/role'
 import User from '../user/user'
 import Bar from '../charts/bar'
@@ -22,7 +22,7 @@ export default class Admin extends Component {
 
         const user=memoryUtils.user
         if(!user._id){
-            return <Redirect to="/login"/>
+            return <Redirect to="/login"/>//内存中如果没有后台返回的id,重定向到登录页面
         }
 
         return (
