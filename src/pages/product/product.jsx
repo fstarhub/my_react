@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {
   Switch,
-  Router,
+  Route,
   Redirect,
 } from 'react-router-dom'
 
@@ -14,9 +14,9 @@ export default class Product extends Component {
   render() {
     return (
       <Switch>
-          <Router path="/product" exact component={ProductHome}/>
-          <Router path="/product/addupdate" component={ProductUpdate}/>
-          <Router path="/product/detail" component={ProductDetail}/>
+          <Route path="/admin/product/product" exact component={ProductHome}/>
+          <Route path="/admin/product/addupdate" component={ProductUpdate}/>
+          <Route path="/admin/product/detail" component={ProductDetail}/>
           <Redirect to="/admin/product/product"/>
       </Switch>
     )
