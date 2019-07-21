@@ -43,10 +43,41 @@ export const reqUpdateCategory=({categoryId,categoryName})=>ajax.post(BASE+'/man
     categoryName
 })
 
+//根据分类id获取分类
+export const reqCategory=(categoryId)=>ajax(BASE+'/manage/category/info',{
+    params:{
+        categoryId
+    }
+})
+
 //获取商品分页列表
 export const reqProducts=(pageNum,pageSize)=>ajax(BASE+'/manage/product/list',{
     params:{
         pageNum,
         pageSize,
+    }
+})
+
+//根据Name/desc搜索产品分页列表
+export const reqSearchProducts=({
+    pageNum,
+    pageSize,
+    searchName,
+    searchType//值为productName或productDesc
+})=>ajax(BASE+'/manage/product/search',{
+    //省略了method:GET
+    params:{
+        pageNum,
+        pageSize,
+        [searchType]:searchName,
+    } 
+})
+
+//商品上/下架处理
+export const reqUpdateStatus=(productId,status)=>ajax(BASE+'/manage/product/updateStatus',{
+    method:'POST',
+    data:{
+        productId,
+        status
     }
 })

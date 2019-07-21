@@ -5,11 +5,14 @@ import {
   Input,
   Button,
   Icon,
-  Table
+  Table,
+  message
 } from 'antd'
 
-import {reqProducts} from '../../api'
+import {reqProducts,reqSearchProducts,reqUpdateStatus} from '../../api'
+import {PAGE_SIZE} from '../../utils/Constants'
 import LinkButton from '../../components/link-button'
+import memoryUtils from '../../utils/memoryUtils'
 
 const Option=Select.Option
 
@@ -19,7 +22,21 @@ export default class ProductHome extends Component {
   state={
     loading:false,
     products:[],//商品列表
-    total:0//商品总数
+    total:0,//商品总数
+    searchType:'productName',//默认按商品名称搜索
+    searchName:'',
+  }
+
+  updateStatus=async(productId,status) =>{
+    //计算更新后的值
+    status=status===1?2:1
+    //请求更新
+    const result =await reqUpdateStatus(productId,status)
+    if(result.status){
+      message.success('更新商品状态成功了')
+      //获取当前页显示
+      this.geteProducts(this.pageNum)
+    }
   }
 
   initColumns=()=>{
@@ -58,10 +75,19 @@ export default class ProductHome extends Component {
       },
       {
         title:'操作',
+        width:100,
         render:(product)=>(
           <span>
-            <LinkButton>详情</LinkButton>
-            <LinkButton>修改</LinkButton>
+            <LinkButton
+            onClick={()=>{
+              memoryUtils.product=product
+              this.props.history.push('/admin/product/product/datail')
+            }}>详情</LinkButton>
+            <LinkButton
+            onClick={()=>{
+              memoryUtils.product=product
+              this.props.history.push('/admin/product/product/addupdata')
+            }}>修改</LinkButton>
           </span>
         )
       },
@@ -70,13 +96,23 @@ export default class ProductHome extends Component {
 
   //异步获取指定商品页码列表
   getProducts=async(pageNum)=>{
-    const result=await reqProducts(pageNum,2)
+    //保存当前请求页码
+    this.pageNum=pageNum
+    const {searchName,searchType}=this.state
+    let result
+    //发请求获取数据
+    if(!searchName){
+      result=await reqProducts(pageNum,PAGE_SIZE)
+    }else{
+      result=await reqSearchProducts({pageNum,pageSize:PAGE_SIZE,searchName,searchType})
+    }
+
     if(result.status===0){
-      //取数据
-      const {total,list}=result.data
-      //更新状态
+      // 取出数据
+      const { total, list } = result.data
+      // 更新状态
       this.setState({
-        products:list,
+        products: list,
         total
       })
     }
@@ -92,38 +128,52 @@ export default class ProductHome extends Component {
   }
   render() {
 
-    const {loading,products,total}=this.state
-    const title=(
+    const { loading, products, total, searchType, searchName } = this.state
+
+    const title = (
       <span>
-        <Select style={{width:200}} value="2">
-          <Option value="1">按名称搜索</Option>
-          <Option value="1">按描述搜索</Option>
+        <Select 
+          style={{ width: 200 }} 
+          value={searchType} 
+          onChange={(value) => this.setState({ searchType: value })}
+        >
+          <Option value="productName">按名称搜索</Option>
+          <Option value="productDesc">按描述搜索</Option>
         </Select>
-        <Input style={{width:200,margin:'0 10px'}} placeholder="关键字"/>
-        <Button type="primary">搜索</Button>
+        <Input 
+          style={{ width: 200, margin: '0 10px' }} 
+          placeholder="关键字" 
+          value={searchName}
+          onChange={event => this.setState({searchName: event.target.value})}
+        />
+        <Button type="primary" onClick={() => this.getProducts(1) }>搜索</Button>
       </span>
     )
-    const extra=(
-      <Button type="primary">
-        <Icon type="plus"/>
+    const extra = (
+      <Button type="primary" onClick={() => {
+        memoryUtils.product = {}
+        this.props.history.push('/admin/product/addupdate')
+      }}>
+        <Icon type="plus" />
         添加商品
       </Button>
     )
     return (
       <Card title={title} extra={extra}>
         <Table
-         bordered={true}
-         rowKey="_id"
-         loading={loading}
-         columns={this.columns}
-         dataSource={products}
-         pagination={{
-           total,
-           defaultPageSize: 2,
-           showQuickJumper: true,
-           onChange: this.getProducts
-         }}
-       />
+          bordered={true}
+          rowKey="_id"
+          loading={loading}
+          columns={this.columns}
+          dataSource={products}
+          pagination={{
+            total,
+            defaultPageSize: PAGE_SIZE,
+            showQuickJumper: true,
+            onChange: this.getProducts,
+            current: this.pageNum
+          }}
+        />
       </Card>
     )
   }
