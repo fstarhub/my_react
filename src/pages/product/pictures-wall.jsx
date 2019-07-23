@@ -59,6 +59,7 @@ export default class PicturesWall extends Component {
     }
     this.setState({fileList})
   }
+
   render() {
 
     const {previewVisible,previewImage,fileList}=this.state
@@ -78,7 +79,7 @@ export default class PicturesWall extends Component {
         onPreview={this.handlePreview}
         onChange={this.handleChange}
         >
-          {fileList.length>3?null:uploadButton}
+          {fileList.length>=3?null:uploadButton}
         </Upload>
         <Modal visible={previewVisible} footer={null} onCancel={this.handleCancel}>
           <img alt="example" style={{width:'100%'}} src={previewImage}/>

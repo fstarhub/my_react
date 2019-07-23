@@ -32,7 +32,7 @@ export default class ProductHome extends Component {
     status=status===1?2:1
     //请求更新
     const result =await reqUpdateStatus(productId,status)
-    if(result.status){
+    if(result.status===0){
       message.success('更新商品状态成功了')
       //获取当前页显示
       this.geteProducts(this.pageNum)
@@ -51,6 +51,7 @@ export default class ProductHome extends Component {
       },
       {
         title:'价格',
+        width:100,
         dataIndex:'price',
         render:(price)=>'$'+price
       },
@@ -58,7 +59,7 @@ export default class ProductHome extends Component {
         title:'状态',
         width:100,
         dataIndex:'status',
-        render:(status)=>{
+        render:({_id,status})=>{
           let btnText="下架"
           let text='在售'
           if(status===2){
@@ -67,7 +68,7 @@ export default class ProductHome extends Component {
           }
           return (
             <span>
-              <button>{btnText}</button>
+              <button onClick={()=>{this.updateStatus(_id,status)}}>{btnText}</button>
               <span>{text}</span>
             </span>
           )
